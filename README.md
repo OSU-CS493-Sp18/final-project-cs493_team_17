@@ -20,7 +20,7 @@ Create an API endpoint (e.g. POST `/users`) through which new users can register
 ## 2. Update your Docker Compose specification to include MongoDB
 
 Next, modify `docker-compose.yml` to include a MongoDB service based on the official `mongo` Docker image.  Make sure this service is set up as follows:
-  * You should use the environment variables `MONGO_INITDB_ROOT_USER` and `MONGO_INITDB_ROOT_PASSWORD` to create a root user for your MongoDB server.  Also use the environment variable `MONGO_INITDB_DATABASE` to create an initial database within your server for your application.
+  * You should use the environment variables `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD` to create a root user for your MongoDB server.  Also use the environment variable `MONGO_INITDB_DATABASE` to create an initial database within your server for your application.
 
   * By default, the `mongo` Docker image stores database data in the directory `/data/db`.  You should create a Docker volume and mount it there so your database data is persisted.
 
@@ -28,13 +28,13 @@ Next, modify `docker-compose.yml` to include a MongoDB service based on the offi
 
 ## 3. Enable JWT-based user logins
 
-Once you have enabled user registration for your application, implement a new API endpoint that allows a registered user to log in by sending their username and password.  If the username/password combination is valid, you should respond with a JWT token, which the user can then send with future requests to authenticate themselves.  The JWT token should be decodable to the user's user ID, by which you should be able to fetch details about the user from the database, and it should expire after 24 hours.
+Once you have enabled user registration for your application, implement a new API endpoint that allows a registered user to log in by sending their username and password.  If the username/password combination is valid, you should respond with a JWT token, which the user can then send with future requests to authenticate themselves.  The JWT token should be decodable to the user's ID, by which you should be able to fetch details about the user from the database, and it should expire after 24 hours.
 
 If a user attempts to log in with an invalid username or password, you should respond with an error.
 
 ## 4. Require authentication for certain API endpoints
 
-Once users can log in, modify your API to require clients to authenticate users in order to fetch personal data for those users.  The client will do this by sending a valid JWT along with their request.  Specifically, modify the following API endpoints to verify that user ID specified in the route path matches the ID of the logged-in user (as indicated by the JWT provided by the client):
+Once users can log in, modify your API to require clients to authenticate users in order to fetch personal data for those users.  The client will do this by sending a valid JWT along with their request.  Specifically, modify the following API endpoints to verify that the user ID specified in the route path matches the ID of the logged-in user (as indicated by the JWT provided by the client):
   * `/users/{userID}/businesses`
   * `/users/{userID}/reviews`
   * `/users/{userID}/photos`
