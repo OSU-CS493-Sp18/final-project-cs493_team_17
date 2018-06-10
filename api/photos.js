@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const validation = require('../lib/validation');
+const { generateAuthToken, requireAuthentication } = require('../lib/auth');
 
 /*
  * Schema describing required/optional fields of a photo object.
@@ -82,9 +83,14 @@ function getPhotoByID(photoID, mysqlPool) {
 /*
  * Route to fetch info about a specific photo.
  */
-router.get('/:photoID', function (req, res, next) {
+router.get('/:photoID',requireAuthentication, function (req, res, next) {
   const mysqlPool = req.app.locals.mysqlPool;
   const photoID = parseInt(req.params.photoID);
+  if (req.user !== req.params.userID) {
+ res.status(403).json({
+ error: "Unauthorized to access the specified resource"
+ });
+ } else {
   getPhotoByID(photoID, mysqlPool)
     .then((photo) => {
       if (photo) {
@@ -98,7 +104,7 @@ router.get('/:photoID', function (req, res, next) {
         error: "Unable to fetch photo.  Please try again later."
       });
     });
-});
+}});
 
 /*
  * Executes a MySQL query to replace a specified photo with new data.

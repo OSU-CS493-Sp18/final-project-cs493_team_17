@@ -2,6 +2,7 @@ const router = require('express').Router();
 const validation = require('../lib/validation');
 const { getReviewsByBusinessID } = require('./reviews');
 const { getPhotosByBusinessID } = require('./photos');
+const { generateAuthToken, requireAuthentication } = require('../lib/auth');
 
 /*
  * Schema describing required/optional fields of a business object.
@@ -203,9 +204,14 @@ function getBusinessByID(businessID, mysqlPool) {
 /*
  * Route to fetch info about a specific business.
  */
-router.get('/:businessID', function (req, res, next) {
+router.get('/:businessID',requireAuthentication, function (req, res, next) {
   const mysqlPool = req.app.locals.mysqlPool;
   const businessID = parseInt(req.params.businessID);
+  if (req.user !== req.params.userID) {
+ res.status(403).json({
+ error: "Unauthorized to access the specified resource"
+ });
+ } else {
   getBusinessByID(businessID, mysqlPool)
     .then((business) => {
       if (business) {
@@ -219,7 +225,7 @@ router.get('/:businessID', function (req, res, next) {
         error: "Unable to fetch business.  Please try again later."
       });
     });
-});
+}});
 
 /*
  * Executes a MySQL query to replace a specified business with new data.
@@ -324,6 +330,7 @@ function getBusinessesByOwnerID(userID, mysqlPool) {
       [ userID ],
       function (err, results) {
         if (err) {
+             console.error("ITS AN ERROR");
           reject(err);
         } else {
           resolve(results);

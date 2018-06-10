@@ -14,6 +14,20 @@ const mysqlDBName = process.env.MYSQL_DATABASE;
 const mysqlUser = process.env.MYSQL_USER;
 const mysqlPassword = process.env.MYSQL_PASSWORD;
 
+// Mongo Stuff --------------------------------------
+
+const MongoClient = require('mongodb').MongoClient;
+const mongoHost = process.env.MONGO_HOST || 'mongo-server';
+const mongoPort = process.env.MONGO_PORT || 27017;
+const mongoUser = process.env.MONGO_USER || 'mongouser';
+const mongoPassword = process.env.MONGO_PASSWORD || 'hunter2';
+const mongoDBName = process.env.MONGO_DB || 'mongodb';
+const mongoURL =  `mongodb://${mongoUser}:${mongoPassword}@${mongoHost}:${mongoPort}/${mongoDBName}`;
+let mongoDB = null;
+
+
+//---------------------------------------------------------------
+
 const maxMySQLConnections = 10;
 app.locals.mysqlPool = mysql.createPool({
   connectionLimit: maxMySQLConnections,
@@ -45,6 +59,21 @@ app.use('*', function (req, res, next) {
   });
 });
 
-app.listen(port, function() {
-  console.log("== Server is running on port", port);
+// app.listen(port, function() {
+//   console.log("== API Server is running on port", port);
+// });
+
+MongoClient.connect(mongoURL, function (err, client){
+  if (!err) {
+       console.log("THERE ARE NO ERRORS FOR NOW ");
+    app.locals.mongoDB = client.db(mongoDBName);
+    app.listen(port, function() {
+      console.log("== Mongo is running on port", port);
+    });
+  }
+  else {
+       console.log("THERE IS AN ERROR IN THE CLIENT FUNTION");
+	console.error(err);
+  }
 });
+//=============================================================
