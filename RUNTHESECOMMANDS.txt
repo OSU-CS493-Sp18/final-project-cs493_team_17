@@ -1,0 +1,20 @@
+Commands to Do before starting the containers==>>
+
+*Get into databases;
+ docker exec -it finalprojectcs493team17_mysql_1 mysql -u businesses -p
+
+* To get everything in .sql file 
+docker exec finalprojectcs493team17_mysql_1 sh -c 'exec mysqldump businesses -u businesses -p"$MYSQL_PASSWORD" ' > db-init/00-db-init.sql
+
+*Create Items table 
+create table items( productid mediumint not null AUTO_INCREMENT, productname varchar(255) not null, rentername text, producttype varchar(255) not null,primary key (productid));
+
+*Create loaners table
+create table loaners ( loanerid mediumint not null AUTO_INCREMENT, loanername varchar(255) not null, itemname varchar(255),loaneraddress text, loanerphone varchar(255) not null,primary key (loanerid));
+
+*Insert into items 
+INSERT INTO items SET productid = NULL,productname = 'pencil',rentername= 'AK',producttype='staionery';
+
+*Insert into loaners
+INSERT INTO loaners SET loanerid = NULL,loanername = 'loaner1',itemname= 'Biscuit',loaneraddress='426 NW 11th Street', loanerphone='2312421';
+
