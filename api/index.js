@@ -5,3 +5,4 @@ router.use('/reviews', require('./reviews').router);
 router.use('/photos', require('./photos').router);
 router.use('/users', require('./users').router);
 router.use('/items', require('./items').router);
+router.use('/loaners', require('./loaners').router);
