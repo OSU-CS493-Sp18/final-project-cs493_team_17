@@ -9,7 +9,7 @@ const itemsSchema = {
   producttype: { required: true }
 };
 
-////nanannananannanaaaaaannnnnnnnnnnnnnnnnnnnn
+//Get ALL items
 function getItems(mysqlPool) {
 
   return new Promise((resolve, reject) => {
@@ -46,4 +46,4 @@ const mysqlPool = req.app.locals.mysqlPool;
      });
      });
      exports.router = router;
-////nannanannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+//End All items

@@ -6,3 +6,4 @@ router.use('/photos', require('./photos').router);
 router.use('/users', require('./users').router);
 router.use('/items', require('./items').router);
 router.use('/loaners', require('./loaners').router);
+router.use('/renters', require('./renters').router);
