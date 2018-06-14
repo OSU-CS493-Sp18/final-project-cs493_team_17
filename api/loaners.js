@@ -137,3 +137,87 @@ router.post('/request', function (req, res, next) {
   }
 );
 // Ends adding loaner request
+
+// Editing a loaner request
+
+function editloanerRequest(loanerID, loanerRequest, mysqlPool) {
+  return new Promise((resolve, reject) => {
+
+    mysqlPool.query('UPDATE loaners SET ? WHERE loanerid = ?', [ loanerRequest, loanerID ], function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.affectedRows > 0);
+      }
+    });
+  });
+}
+
+/*
+ * Route to replace data for a loanerRequest.
+ */
+router.put('/request/:loanerID', function (req, res, next) {
+  const mysqlPool = req.app.locals.mysqlPool;
+  const loanerID = parseInt(req.params.loanerID);
+
+    editloanerRequest(loanerID, req.body, mysqlPool)
+      .then((updateSuccessful) => {
+        if (updateSuccessful) {
+          res.status(200).json({
+            Update_Confirmation: {
+              loanerRequest: `HELLO , YOU HAVE SUCCESSFULLY EDITIED LOANER REQUEST ID ${loanerID}`
+            }
+          });
+        } else {
+          next();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({
+          error: "Unable to update specified loanerRequest.  Please try again later."
+        });
+      });
+  }
+);
+// Ends editing a loaner request
+
+
+
+// Delete Request
+
+function deleteRequestByID(loanerID, mysqlPool) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query('DELETE FROM loaners WHERE loanerid = ?', [ loanerID ], function (err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.affectedRows > 0);
+      }
+    });
+  });
+
+}
+
+/*
+ * Route to delete a loaner request
+ */
+router.delete('/request/:loanerID', function (req, res, next) {
+  const mysqlPool = req.app.locals.mysqlPool;
+  const loanerID = parseInt(req.params.loanerID);
+  deleteRequestByID(loanerID, mysqlPool)
+    .then((deleteSuccessful) => {
+      if (deleteSuccessful) {
+        res.status(204).json();
+      } else {
+        next();
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: "Unable to delete loaner request.  Please try again later."
+      });
+    });
+});
+
+// End Delete loaner request
