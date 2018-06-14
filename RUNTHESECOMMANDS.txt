@@ -1,8 +1,14 @@
-Commands to Do before starting the containers==>>
+Commands to Do ==>>
+Steps=>>
+1. Start the mysql and mongo-server by using 
+docker-compose up --build mysql mongo-server
 
-*Get into databases;
+2. Then run these commands
+
+*Get into databases, the password is 'hunter2' ,enter when asked.
  docker exec -it finalprojectcs493team17_mysql_1 mysql -u businesses -p
 
+// DONT RUN THIS COMMAND
 * To get everything in .sql file 
 docker exec finalprojectcs493team17_mysql_1 sh -c 'exec mysqldump businesses -u businesses -p"$MYSQL_PASSWORD" ' > db-init/00-db-init.sql
 
